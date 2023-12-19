@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateReservationDto {
   @IsString()
@@ -16,9 +16,6 @@ export class CreateReservationDto {
   @IsNumber()
   readonly participants: number;
 
-  @IsString()
-  readonly ownerName: string;
-
-  //   @IsUUID()
-  //   readonly userId: string;
+  @IsUUID()
+  readonly userId: string;
 }

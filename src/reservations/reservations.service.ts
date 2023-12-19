@@ -1,40 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entities/reservation.entity';
 
 @Injectable()
 export class ReservationsService {
+  constructor(
+    @InjectRepository(Reservation)
+    private readonly reservationRepository: Repository<Reservation>,
+  ) {}
   private reservations: Reservation[] = [];
 
   findAll() {
-    return this.reservations;
+    return this.reservationRepository.find();
   }
 
-  findById(id: string) {
-    return this.reservations.find((reservation) => reservation.id === id);
+  async findById(id: string) {
+    const reservation = await this.reservationRepository.findOne({
+      where: { id },
+    });
+
+    if (!reservation) {
+      throw new NotFoundException(`Reservation #${id} not found`);
+    }
+
+    return reservation;
   }
 
   create(createReservationDto: CreateReservationDto) {
-    const id = 'id';
-    const userId = 'userId';
-    const createdAt = new Date();
-    return this.reservations.push({
+    const reservation = this.reservationRepository.create(createReservationDto);
+    return this.reservationRepository.save(reservation);
+  }
+
+  async update(id: string, updateReservationDto: UpdateReservationDto) {
+    const existingReservation = await this.reservationRepository.preload({
       id,
-      userId,
-      createdAt,
-      ...createReservationDto,
+      ...updateReservationDto,
     });
-  }
 
-  update(id: string, updateReservationDto: UpdateReservationDto) {
-    const existingReservation = this.findById(id);
     if (existingReservation) {
-      // update
+      throw new NotFoundException(`Reservation #${id} not found`);
     }
+
+    return this.reservationRepository.save(existingReservation);
   }
 
-  remove(id: string) {
-    // remove reservation my id
+  async remove(id: string) {
+    const reservation = await this.findById(id);
+
+    return this.reservationRepository.remove(reservation);
   }
 }

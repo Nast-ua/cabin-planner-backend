@@ -21,6 +21,14 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Running postgreSQL db locally
+
+```bash
+# start docker container in the background
+$ docker-compose up -d
+
+```
+
 ## Test
 
 ```bash
