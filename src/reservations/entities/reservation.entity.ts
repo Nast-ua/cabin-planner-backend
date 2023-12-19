@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, Generated } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Generated,
+  ManyToOne,
+} from 'typeorm';
 
 @Entity()
 export class Reservation {
@@ -23,6 +30,6 @@ export class Reservation {
   @Column()
   participants: number;
 
-  @Column()
-  userId: string;
+  @ManyToOne(() => User, (user) => user.reservations)
+  user: User;
 }

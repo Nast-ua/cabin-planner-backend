@@ -11,7 +11,6 @@ export class ReservationsService {
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
   ) {}
-  private reservations: Reservation[] = [];
 
   findAll() {
     return this.reservationRepository.find();
