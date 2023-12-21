@@ -3,19 +3,19 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
   JoinTable,
   OneToMany,
+  PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 
 @Entity()
 @Unique(['email', 'clerkId'])
 export class User {
-  @Generated('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @CreateDateColumn()
@@ -24,16 +24,20 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
-  admin?: boolean;
+  @Column({ nullable: true })
+  admin: boolean;
 
-  @Column()
+  @Column({ default: false })
   approved: boolean;
 
   @Column()
   clerkId: string;
 
   @JoinTable()
-  @OneToMany(() => Reservation, (reservation) => reservation.user)
+  @OneToMany(() => Reservation, (reservation) => reservation.user, {
+    eager: true,
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   reservations: Reservation[];
 }

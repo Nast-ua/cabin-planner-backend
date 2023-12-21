@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsOptional, IsUUID } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -12,9 +12,15 @@ export class CreateUserDto {
   @IsBoolean()
   admin: boolean;
 
+  @IsOptional()
   @IsBoolean()
   approved: boolean;
 
-  @IsUUID()
+  @IsString()
   clerkId: string;
 }
+
+// {
+//   "email": "test@test.com",
+//   "clerkId": "test1clerkId"
+// }

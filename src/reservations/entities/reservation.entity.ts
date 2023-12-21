@@ -3,17 +3,20 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
   ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
 export class Reservation {
-  @Generated('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
+
+  @Column()
+  ownerName: string;
 
   @Column()
   startDate: Date;
@@ -30,6 +33,6 @@ export class Reservation {
   @Column()
   participants: number;
 
-  @ManyToOne(() => User, (user) => user.reservations)
-  user: User;
+  @ManyToOne(() => User, (user) => user.reservations, { cascade: true })
+  user: string;
 }

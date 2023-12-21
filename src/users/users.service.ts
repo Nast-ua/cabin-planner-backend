@@ -13,11 +13,14 @@ export class UsersService {
   ) {}
 
   findAll() {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ relations: { reservations: true } });
   }
 
   async findById(id: string) {
-    const user = await this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: { reservations: true },
+    });
 
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);

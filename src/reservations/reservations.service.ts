@@ -1,5 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
@@ -28,27 +33,46 @@ export class ReservationsService {
     return reservation;
   }
 
-  create(createReservationDto: CreateReservationDto) {
-    const reservation = this.reservationRepository.create(createReservationDto);
+  async create(user: User, createReservationDto: CreateReservationDto) {
+    const reservation = await this.reservationRepository.create({
+      ...createReservationDto,
+      user: user.id,
+    });
+
     return this.reservationRepository.save(reservation);
   }
 
-  async update(id: string, updateReservationDto: UpdateReservationDto) {
+  async update(
+    id: string,
+    user: User,
+    updateReservationDto: UpdateReservationDto,
+  ) {
     const existingReservation = await this.reservationRepository.preload({
       id,
       ...updateReservationDto,
     });
 
-    if (existingReservation) {
+    if (!existingReservation) {
       throw new NotFoundException(`Reservation #${id} not found`);
     }
+
+    if (user.id !== existingReservation.user)
+      throw new ForbiddenException("You can't update this reservation");
 
     return this.reservationRepository.save(existingReservation);
   }
 
-  async remove(id: string) {
+  async remove(id: string, user?: User) {
     const reservation = await this.findById(id);
 
+    if (!reservation) {
+      throw new NotFoundException(`Reservation #${id} not found`);
+    }
+
+    if (user.id !== reservation.user)
+      throw new ForbiddenException("You can't update this reservation");
+
+    // Remove from user
     return this.reservationRepository.remove(reservation);
   }
 }
