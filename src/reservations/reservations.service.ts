@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -17,8 +18,11 @@ export class ReservationsService {
     private readonly reservationRepository: Repository<Reservation>,
   ) {}
 
-  findAll() {
-    return this.reservationRepository.find();
+  findAll({ limit, offset }: PaginationQueryDto) {
+    return this.reservationRepository.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
   async findById(id: string) {
