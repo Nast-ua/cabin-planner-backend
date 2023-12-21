@@ -3,12 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
+// TODO: Add more indices?
 @Entity()
 export class Reservation {
+  @Index()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinTable,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -12,6 +13,7 @@ import {
 @Entity()
 @Unique(['email', 'clerkId'])
 export class User {
+  @Index()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,6 +32,7 @@ export class User {
   @Column({ default: false })
   approved: boolean;
 
+  @Index()
   @Column()
   clerkId: string;
 
