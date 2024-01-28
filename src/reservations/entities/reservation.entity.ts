@@ -1,3 +1,4 @@
+import { IsOptional } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -18,6 +19,7 @@ export class Reservation {
   name: string;
 
   @Column()
+  @IsOptional()
   ownerName: string;
 
   @Column()

@@ -8,6 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { User } from 'src/users/entities/user.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
@@ -20,9 +21,8 @@ export class ReservationsController {
   private user: User = new User(); // TODO: create protected routes + get user from auth guard
 
   @Get()
-  findAll(@Query() query) {
-    // const {limit, offset} = query;
-    return this.reservationsService.findAll();
+  findAll(@Query() paginatedQuery: PaginationQueryDto) {
+    return this.reservationsService.findAll(paginatedQuery);
   }
 
   @Get(':id')

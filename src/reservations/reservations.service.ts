@@ -11,6 +11,8 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Reservation } from './entities/reservation.entity';
 
+//TODO: Add queries params for querying reservations by month
+// TODO: Add transactions for sending emails
 @Injectable()
 export class ReservationsService {
   constructor(
